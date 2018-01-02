@@ -11,7 +11,7 @@ with open(filename, 'r') as f:
     for line in f:
         generator.read_sentence(line.strip())
 
-@app.route('/genquote')
+@app.route('/quote')
 def hello_world():
     return render_template('index.html', message=generator.generate_sentence(length=30))
 
