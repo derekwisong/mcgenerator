@@ -61,7 +61,7 @@ class Generator(object):
         items = sentence.split()
         self.read_items(items)
 
-    def generate(self):
+    def generate(self, length=None):
         generated = []
 
         if len(self.start_words) == 0:
@@ -71,6 +71,9 @@ class Generator(object):
         generated.append(word)
 
         while word not in self.end_words:
+            if length and len(generated) >= length:
+                break
+
             next_words = self.next_words[word]
             # should compute these ranges sonly once
             word = draw(ranges(next_words))
@@ -78,8 +81,8 @@ class Generator(object):
 
         return generated
 
-    def generate_sentence(self):
-        return " ".join(self.generate())
+    def generate_sentence(self, length=None):
+        return " ".join(self.generate(length=length))
 
 if __name__ == '__main__':
     g = Generator()
