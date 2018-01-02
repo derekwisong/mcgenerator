@@ -83,10 +83,18 @@ class Generator(object):
 
 if __name__ == '__main__':
     g = Generator()
+    import sys
 
-    with open('quotes2.txt', 'r') as f:
+    if len(sys.argv) < 3:
+        filename = "quotes2.txt"
+        num = 20
+    else:
+        filename = sys.argv[1]
+        num = int(sys.argv[2])
+
+    with open(filename, 'r') as f:
         for line in f:
             g.read_sentence(line.strip())
 
-    for i in range(20):
+    for i in range(num):
         print("{0: >5}.  {1}".format(i + 1, g.generate_sentence()))
