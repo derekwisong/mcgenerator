@@ -32,6 +32,7 @@ def draw(ranges):
 class Generator(object):
     def __init__(self):
         self.next_words = {}
+        self.next_ranges = {}
         self.start_words = set()
         self.end_words = set()
 
@@ -61,6 +62,9 @@ class Generator(object):
         items = sentence.split()
         self.read_items(items)
 
+    def build_ranges(self):
+        self.next_ranges = {word: ranges(next_words) for (word, next_words) in self.next_words.items()}
+
     def generate(self, length=None):
         generated = []
 
@@ -74,9 +78,7 @@ class Generator(object):
             if length and len(generated) >= length:
                 break
 
-            next_words = self.next_words[word]
-            # should compute these ranges sonly once
-            word = draw(ranges(next_words))
+            word = draw(self.next_ranges[word])
             generated.append(word)
 
         return generated
@@ -84,8 +86,18 @@ class Generator(object):
     def generate_sentence(self, length=None):
         return " ".join(self.generate(length=length))
 
+    @staticmethod
+    def from_file(filename):
+        generator = Generator()
+
+        with open(filename, 'r') as f:
+            for line in f:
+                generator.read_sentence(line.strip())
+
+        generator.build_ranges()
+        return generator
+
 if __name__ == '__main__':
-    g = Generator()
     import sys
 
     if len(sys.argv) < 3:
@@ -95,9 +107,7 @@ if __name__ == '__main__':
         filename = sys.argv[1]
         num = int(sys.argv[2])
 
-    with open(filename, 'r') as f:
-        for line in f:
-            g.read_sentence(line.strip())
-
+    g = Generator.from_file(filename)
+    
     for i in range(num):
         print("{0: >5}.  {1}".format(i + 1, g.generate_sentence()))
