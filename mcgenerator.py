@@ -65,7 +65,7 @@ class Generator(object):
         items = sentence.split()
         self.read_items(items)
 
-    def build_ranges(self):
+    def calculate_probabilities(self):
         self.next_word_fraction = {word: counts_to_fractions(next_words)
                                    for (word, next_words) in self.next_word_count.items()}
 
@@ -98,7 +98,7 @@ class Generator(object):
             for line in f:
                 generator.read_sentence(line.strip())
 
-        generator.build_ranges()
+        generator.calculate_probabilities()
         return generator
 
 
