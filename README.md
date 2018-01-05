@@ -78,3 +78,84 @@ Out[13]: 'derek.'
 In [14]: mcgenerator.weighted_random(prob)
 Out[14]: 'wisong.'
 ```
+
+In this implementation, the words that define the start and end of a sentence are actually
+taken from the start and end words of the sentences used to train the model. The first and
+last words from each sentence trained with are placed into special lists. The process of
+generating a new sentence is as follows:
+
+1. randomly (uniformly, no weighting involved) pick a word from the list of start words
+2. using the start word, draw the next word(s) using the methods described above until a
+   word which has been used to end a sentence is encountered.
+
+Here is an example of training on more sentences, and then generating a few new sentences.
+
+Note that after training more sentences (using the read_sentence function), I must calculate 
+the probabilities again before generating new sentences
+
+```python
+In [15]: g.read_sentence("my cat's name is luna")
+
+In [16]: g.read_sentence("it is snowy outside")
+
+In [17]: g.read_sentence("what time is it")
+
+In [18]: g.read_sentence("how much wood could a woodchuck chuck")
+
+In [19]: g.read_sentence("this is a markov chain application")
+
+In [20]: g.read_sentence("a hammer is a useful tool")
+
+In [21]: g.read_sentence("i like to write python code")
+
+In [22]: g.calculate_probabilities()
+
+In [23]: g.generate_sentence()
+Out[23]: 'how much wood could a useful tool'
+
+In [24]: g.generate_sentence()
+Out[24]: 'my name is a woodchuck chuck'
+
+In [25]: g.generate_sentence()
+Out[25]: 'a useful tool'
+
+In [26]: g.generate_sentence()
+Out[26]: 'this is snowy outside'
+
+In [27]: g.generate_sentence()
+Out[27]: 'i like to write python code'
+
+In [28]: g.generate_sentence()
+Out[28]: 'how much wood could a useful tool'
+
+In [29]: g.generate_sentence()
+Out[29]: 'a markov chain application'
+
+In [30]: g.generate_sentence()
+Out[30]: 'what time is a woodchuck chuck'
+
+In [31]: g.generate_sentence()
+Out[31]: 'how much wood could a useful tool'
+
+In [32]: g.generate_sentence()
+Out[32]: 'a markov chain application'
+
+In [33]: g.generate_sentence()
+Out[33]: 'my name is snowy outside'
+
+In [34]: g.generate_sentence()
+Out[34]: 'a woodchuck chuck'
+
+In [35]: g.generate_sentence()
+Out[35]: "my cat's name is wisong."
+
+In [36]: g.generate_sentence()
+Out[36]: 'it'
+
+In [37]: g.generate_sentence()
+Out[37]: 'what time is it'
+
+In [38]: g.generate_sentence()
+Out[38]: 'my name is a woodchuck chuck'
+
+```
