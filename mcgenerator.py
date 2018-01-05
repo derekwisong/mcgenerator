@@ -1,38 +1,41 @@
 from __future__ import division
 import random
-from collections import Counter
 
-def dict_to_pct(x):
-    return {i:j/sum(x.values()) for (i,j) in x.items()}
 
-def ranges(dictionary):
-    # convert words to percentages
-    d = dict_to_pct(dictionary)
-    s = sorted(d.items(), key=lambda x:x[1])
-    v = 0
-    n = {}
+def counts_to_fractions(count_dict):
+    """
+    Convert a dictionary of word -> count to fractions that the word is used.
+    > dict_to_pct({'abc': 12, 'def': 24})
+    > {'abc': 0.3333333333333333, 'def': 0.6666666666666666}
+    :param count_dict: word count dict
+    :return: dict of fractions
+    """
+    return {i: j/sum(count_dict.values()) for (i, j) in count_dict.items()}
 
-    for word, pct in s:
-        r = (v, v + pct)
-        n[word] = r
-        v = r[1]
 
-    return n
+def weighted_random(weight_dict):
+    """
+    Given a dictionary of weighted choices where the key is an item to be chosen and the value is the weight, draw
+    a random sample.
+    :param weight_dict: dict of items to weights {'a': 0.5, 'b': 0.5}
+    :return: A value randomly chosen by weight
+    """
+    rand_val = random.random()
+    total = 0
 
-def draw(ranges):
-    r = random.random()
+    for k, v in weight_dict.items():
+        total += v
 
-    for word, (start, end) in  ranges.items():
-        if r >= start and r < end:
-            break
+        if rand_val <= total:
+            return k
 
-    return word
+    raise Exception("Unable to draw a weighted random value")
 
 
 class Generator(object):
     def __init__(self):
-        self.next_words = {}
-        self.next_ranges = {}
+        self.next_word_count = {}
+        self.next_word_fraction = {}
         self.start_words = set()
         self.end_words = set()
 
@@ -47,11 +50,11 @@ class Generator(object):
             if i == len(items) - 2:
                 self.end_words.add(next_item)
 
-            if item not in self.next_words:
-                self.next_words[item] = {next_item: 1}
+            if item not in self.next_word_count:
+                self.next_word_count[item] = {next_item: 1}
                 continue
             else:
-                next_words = self.next_words[item]
+                next_words = self.next_word_count[item]
 
                 if next_item not in next_words:
                     next_words[next_item] = 1
@@ -63,7 +66,8 @@ class Generator(object):
         self.read_items(items)
 
     def build_ranges(self):
-        self.next_ranges = {word: ranges(next_words) for (word, next_words) in self.next_words.items()}
+        self.next_word_fraction = {word: counts_to_fractions(next_words)
+                                   for (word, next_words) in self.next_word_count.items()}
 
     def generate(self, length=None):
         generated = []
@@ -78,7 +82,7 @@ class Generator(object):
             if length and len(generated) >= length:
                 break
 
-            word = draw(self.next_ranges[word])
+            word = weighted_random(self.next_word_fraction[word])
             generated.append(word)
 
         return generated
@@ -97,17 +101,18 @@ class Generator(object):
         generator.build_ranges()
         return generator
 
+
 if __name__ == '__main__':
     import sys
 
     if len(sys.argv) < 3:
-        filename = "quotes2.txt"
+        training_file = "data/quotes2.txt"
         num = 20
     else:
-        filename = sys.argv[1]
+        training_file = sys.argv[1]
         num = int(sys.argv[2])
 
-    g = Generator.from_file(filename)
+    g = Generator.from_file(training_file)
     
-    for i in range(num):
-        print("{0: >5}.  {1}".format(i + 1, g.generate_sentence()))
+    for _ in range(num):
+        print("{0: >5}.  {1}".format(_ + 1, g.generate_sentence()))
