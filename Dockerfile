@@ -14,6 +14,4 @@ COPY . /app
 
 EXPOSE 5000
 
-ENTRYPOINT [ "python" ]
-
-CMD [ "run.py" ]
+CMD ["gunicorn", "--config", "gunicorn_config.py", "run:app"]
