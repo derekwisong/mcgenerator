@@ -15,7 +15,36 @@ name following the word "is".  You'll see that for the "is" entry in the diction
 there are 2 items, each with a count of 1, while the other words "my" and "name", both
 have counts of 2 for their subsequent words.
 
-### Examples of the data structure used
+### Training from a file and generating sentences
+
+```python
+In [1]: import mcgenerator
+
+In [2]: g = mcgenerator.Generator.from_file('data/quotes2.txt')
+
+In [3]: g.generate_sentence()
+Out[3]: 'Take up one thing'
+
+In [4]: g.generate_sentence()
+Out[4]: 'When you'
+
+In [5]: g.generate_sentence()
+Out[5]: 'As we must lose our dreams can make the majority, it'
+
+In [6]: g.generate_sentence()
+Out[6]: 'Trust because they are not about creating yourself'
+
+In [7]: g.generate_sentence()
+Out[7]: 'Failure is not willing to achieve greatness stop asking for the caterpillar thought the good to accept the firm resolve of value'
+
+In [8]: g.generate_sentence()
+Out[8]: 'As of fear'
+
+In [9]: g.generate_sentence()
+Out[9]: 'Trust because its always beyond your life'
+```
+
+### Details about the data structure used
 
 ```python
 In [1]: import mcgenerator
