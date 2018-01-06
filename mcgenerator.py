@@ -126,11 +126,18 @@ class TupleGenerator(Generator):
         for item1, item2, item3 in triples:
             self.add_item((item1, item2), item3)
 
-    def generate(self, length=None):
+    def generate(self, length=20):
         # pick 2 random seed words
         seed = random.randint(0, len(self.next_word_count) - 1)
-        seed_words = list(self.next_word_count.keys())[seed]
-        return seed_words
+        word1, word2 = list(self.next_word_count.keys())[seed]
+        words = [word1, word2]
+
+        for i in range(length):
+            next_word = weighted_random(self.next_word_fraction[(word1, word2)])
+            word1, word2 = word2, next_word
+            words.append(word2)
+
+        return words
 
 
 if __name__ == '__main__':
