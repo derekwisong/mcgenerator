@@ -2,6 +2,19 @@ from __future__ import division
 import random
 
 
+def make_triples(item_list):
+    """
+    Generate triples from a list of items.
+    :param item_list: A list of items, such as ['a', 'big', 'dog']
+    :return: a list of triples
+    """
+    if len(item_list) < 3:
+        return
+
+    for i in range(len(item_list) - 2):
+        yield (item_list[i], item_list[i+1], item_list[i+2])
+
+
 def counts_to_fractions(count_dict):
     """
     Convert a dictionary of word -> count to fractions that the word is used.
@@ -39,6 +52,18 @@ class Generator(object):
         self.start_words = set()
         self.end_words = set()
 
+    def add_item(self, item, next_item):
+        if item not in self.next_word_count:
+            self.next_word_count[item] = {next_item: 1}
+            return
+        else:
+            next_words = self.next_word_count[item]
+
+            if next_item not in next_words:
+                next_words[next_item] = 1
+            else:
+                next_words[next_item] += 1
+
     def read_items(self, items):
         for i in range(len(items) - 1):
             item = items[i]
@@ -50,16 +75,7 @@ class Generator(object):
             if i == len(items) - 2:
                 self.end_words.add(next_item)
 
-            if item not in self.next_word_count:
-                self.next_word_count[item] = {next_item: 1}
-                continue
-            else:
-                next_words = self.next_word_count[item]
-
-                if next_item not in next_words:
-                    next_words[next_item] = 1
-                else:
-                    next_words[next_item] += 1
+            self.add_item(item, next_item)
 
     def read_sentence(self, sentence):
         items = sentence.split()
@@ -100,6 +116,21 @@ class Generator(object):
 
         generator.calculate_probabilities()
         return generator
+
+
+class TupleGenerator(Generator):
+
+    def read_items(self, items):
+        triples = make_triples(items)
+
+        for item1, item2, item3 in triples:
+            self.add_item((item1, item2), item3)
+
+    def generate(self, length=None):
+        # pick 2 random seed words
+        seed = random.randint(0, len(self.next_word_count) - 1)
+        seed_words = list(self.next_word_count.keys())[seed]
+        return seed_words
 
 
 if __name__ == '__main__':
