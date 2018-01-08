@@ -12,7 +12,7 @@ generators = {'inspirational': Generator.from_file('data/quotes2.txt'),
               'tuple': TupleGenerator.from_file('data/quotes2.txt')}
 
 
-@app.route('/quote')
+@app.route('/quote/')
 def quote():
     length = request.args.get('length', default=30, type=int)
     generator = request.args.get('generator', default='inspirational', type=str)
@@ -21,7 +21,7 @@ def quote():
     return sentence
 
 
-@app.route('/meme')
+@app.route('/meme/')
 def meme():
     length = request.args.get('length', default=15, type=int)
     generator = request.args.get('generator', default='inspirational', type=str)
