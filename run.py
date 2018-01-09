@@ -1,6 +1,5 @@
 from flask import Flask, request, send_file
-import image
-
+import mcgenerator.image
 from mcgenerator import Generator, TupleGenerator
 
 app = Flask(__name__, instance_relative_config=True)
@@ -28,7 +27,7 @@ def meme():
     # generate the quote
     sentence = generators[generator].generate_sentence(length=length)
     # generate captioned image
-    captioned_image = image.get_captioned_image(sentence)
+    captioned_image = mcgenerator.image.get_captioned_image(sentence)
     return send_file(captioned_image, mimetype='image/jpeg')
 
 

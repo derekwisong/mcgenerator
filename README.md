@@ -5,6 +5,34 @@ A web app which uses a Markov chain to generate text.
 A Markov chain is a process where state changes only depend on the current state
 and state changes are probabilistic.
 
+## Requirements and notes
+
+* Built using python 3.6
+* Python modules in requirements.txt (can pip install -r requirements.txt)
+* Docker (to run as a container with Gunicorn)
+
+## Running test server
+
+```bash
+$ python run.py
+```
+
+## Running Docker version
+
+1. Build container
+
+   ```bash
+   $ ./build_container
+   ```
+
+2. Run container
+
+   ```bash
+   docker run -p 80:5000 derekwisong/mcgenerator:dev
+   ```
+
+3. Navigate to http://localhost:80/meme/
+
 ## Data structure description
 
 The Markov chain is represented as a Python dictionary. The key of the dictionary
