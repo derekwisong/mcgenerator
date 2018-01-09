@@ -13,9 +13,12 @@ and state changes are probabilistic.
 
 ## Running test server
 
-```bash
-$ python run.py
-```
+1. Start the application
+   ```bash
+   $ python run.py
+   ```
+
+2. Navigate to http://localhost:5000/meme/
 
 ## Running Docker version
 
