@@ -8,8 +8,9 @@ app.config.from_pyfile('config.py', silent=True)
 
 generators = {'inspirational': Generator.from_file('data/quotes2.txt'),
               'potter': Generator.from_file('data/potter.txt'),
-              'tuple': TupleGenerator.from_file('data/quotes2.txt')}
-
+              'tuple': TupleGenerator.from_file('data/quotes2.txt'),
+              'trumptuples': TupleGenerator.from_file('data/trump_tweets.txt'),
+              'trump': Generator.from_file('data/trump_tweets.txt')}
 
 @app.route('/quote/')
 def quote():
